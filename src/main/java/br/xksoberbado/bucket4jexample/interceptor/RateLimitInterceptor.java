@@ -21,7 +21,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     private static final String HEADER = "X-Request-ID";
 
-    private final ProxyManager buckets;
+    private final ProxyManager proxyManager;
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
@@ -29,13 +29,13 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        response.sendError(HttpStatus.TOO_MANY_REQUESTS.value(), "Exceed!");
+        response.sendError(HttpStatus.TOO_MANY_REQUESTS.value());
 
         return false;
     }
 
     public Bucket resolveBucket(final String key) {
-        return buckets.builder().build(key, getConfigSupplier());
+        return proxyManager.builder().build(key, getConfigSupplier());
     }
 
     private Supplier<BucketConfiguration> getConfigSupplier() {

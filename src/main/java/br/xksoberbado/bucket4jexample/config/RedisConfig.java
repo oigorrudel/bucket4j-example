@@ -1,7 +1,5 @@
 package br.xksoberbado.bucket4jexample.config;
 
-import com.giffing.bucket4j.spring.boot.starter.config.cache.SyncCacheResolver;
-import com.giffing.bucket4j.spring.boot.starter.config.cache.jcache.JCacheCacheResolver;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
 import io.github.bucket4j.grid.jcache.JCacheProxyManager;
 import org.redisson.Redisson;
@@ -11,7 +9,6 @@ import org.redisson.jcache.configuration.RedissonConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import javax.cache.CacheManager;
 import javax.cache.Caching;
@@ -53,11 +50,5 @@ public class RedisConfig {
     @Bean
     ProxyManager<String> proxyManager(final CacheManager cacheManager) {
         return new JCacheProxyManager<>(cacheManager.getCache(CACHE_NAME));
-    }
-
-    @Bean
-    @Primary
-    public SyncCacheResolver bucket4jCacheResolver(final CacheManager cacheManager) {
-        return new JCacheCacheResolver(cacheManager);
     }
 }
