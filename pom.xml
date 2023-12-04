@@ -43,12 +43,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.vladimir-bukhtoyarov</groupId>
-            <artifactId>bucket4j-redis</artifactId>
-            <version>7.6.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.17.7</version>
