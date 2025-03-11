@@ -6,6 +6,7 @@ import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.Refill;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.util.function.Supplier;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RateLimitInterceptor implements HandlerInterceptor {
@@ -25,7 +27,12 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
-        if (resolveBucket(request.getHeader(HEADER)).tryConsume(1)) {
+        final var header = request.getHeader(HEADER);
+        final var bucket = resolveBucket(header);
+
+        if (bucket.tryConsume(1)) {
+            log.info("Bucket. [header: {}, availableTokens: {}]", header, bucket.getAvailableTokens());
+
             return true;
         }
 
